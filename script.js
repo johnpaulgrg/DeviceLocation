@@ -96,6 +96,13 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 28.4089, lng: 77.1162 },
     zoom: 15,
+    styles: [
+      {
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+    ],
   });
 
   createMarkers(allLocations);
@@ -108,10 +115,14 @@ function createMarkers(locations) {
 
   locations.forEach((location) => {
     const marker = new google.maps.Marker({
-      position: { lat: location.lat, lng: location.lng },
+      position: new google.maps.LatLng(location.lat, location.lng),
       map: map,
       icon: aedIcon,
-      title: location.name,
+      label: {
+        text: location.name,
+        color: "#000",
+        fontWeight: "bold",
+      },
     });
 
     marker.addListener("click", () => {
