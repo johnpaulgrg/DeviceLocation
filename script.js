@@ -165,7 +165,7 @@ function requestUserLocation() {
     navigator.geolocation.watchPosition(showUserLocation, handleError, {
       enableHighAccuracy: true,
       timeout: 10000,
-      maximumAge: 0,
+      maximumAge: 60000,
     });
   } else {
     alert("Geolocation is not supported by your browser.");
@@ -197,7 +197,7 @@ function showUserLocation(position) {
     zIndex: google.maps.Marker.MAX_ZINDEX + 1,
   });
 
-  map.panTo(userLocation);
+  //   map.panTo(userLocation);
 }
 
 function handleError(error) {
