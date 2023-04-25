@@ -110,7 +110,24 @@ function createMap(userLocation) {
       icon: aedIcon,
     });
 
-    // ...
+    marker.addListener("click", function () {
+      const request = {
+        origin: userLocation,
+        destination: marker.getPosition(),
+        travelMode: "DRIVING",
+      };
+      directionsService.route(request, function (result, status) {
+        if (status == "OK") {
+          directionsRenderer.setDirections(result);
+          const duration = result.routes[0].legs[0].duration.text;
+          const content = `<div><strong>${location.name}</strong><br>${location.address}<br>Status: ${location.status}<br>Estimated travel time: ${duration}</div>`;
+          const infoWindow = new google.maps.InfoWindow({
+            content: content,
+          });
+          infoWindow.open(map, marker);
+        }
+      });
+    });
   });
 }
 
