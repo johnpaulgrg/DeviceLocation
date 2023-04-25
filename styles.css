@@ -63,16 +63,6 @@
     background-color: #e53935;
   }
   
-  @media screen and (max-width: 768px) {
-    .header {
-      flex-direction: column;
-      padding: 0.5rem;
-    }
-  
-    .title {
-      margin-bottom: 0.5rem;
-    }
-  }
   
   
   
