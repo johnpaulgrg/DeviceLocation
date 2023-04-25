@@ -3,92 +3,145 @@ let userMarker;
 const aedIcon = "aed-icon.png";
 
 const allLocations = [
-  // Gurugram locations
   {
     lat: 28.407945984784263,
     lng: 77.1165467236218,
     name: "AED 1",
-    status: "working",
+    status: "Working",
     address: "Address 1",
   },
   {
     lat: 28.40726040753197,
     lng: 77.11703320021923,
     name: "AED 2",
-    status: "working",
+    status: "Working",
     address: "Address 2",
   },
   {
     lat: 28.40625064816643,
     lng: 77.11638947005999,
     name: "AED 3",
-    status: "not working",
+    status: "Working",
     address: "Address 3",
   },
   {
     lat: 28.40601472169394,
     lng: 77.11425443169855,
     name: "AED 4",
-    status: "not working",
+    status: "Working",
     address: "Address 4",
   },
-  // Manipal locations
+  {
+    lat: 28.40857213663377,
+    lng: 77.11377163407913,
+    name: "AED 5",
+    status: "Not Working",
+    address: "Address 5",
+  },
+  {
+    lat: 28.40857213663377,
+    lng: 77.1138038205871,
+    name: "AED 6",
+    status: "Not Working",
+    address: "Address 6",
+  },
+  {
+    lat: 28.40924215026731,
+    lng: 77.11726923461093,
+    name: "AED 7",
+    status: "Not Working",
+    address: "Address 7",
+  },
+  {
+    lat: 28.410383994722114,
+    lng: 77.11577792640871,
+    name: "AED 8",
+    status: "Not Working",
+    address: "Address 8",
+  },
   {
     lat: 13.35209307245631,
     lng: 74.79333562540025,
-    name: "AED 5",
-    status: "working",
-    address: "Address 5",
+    name: "AED 9",
+    status: "Working",
+    address: "Address 9",
   },
   {
     lat: 13.351743299193053,
     lng: 74.79328923955707,
-    name: "AED 6",
-    status: "working",
-    address: "Address 6",
+    name: "AED 10",
+    status: "Working",
+    address: "Address 10",
   },
   {
     lat: 13.351367198344537,
     lng: 74.79270555103045,
-    name: "AED 7",
-    status: "not working",
-    address: "Address 7",
+    name: "AED 11",
+    status: "Working",
+    address: "Address 11",
   },
   {
     lat: 13.353664076063442,
     lng: 74.78981318695902,
-    name: "AED 8",
-    status: "not working",
-    address: "Address 8",
-  },
-  // Kakkanad locations
-  {
-    lat: 10.0156779,
-    lng: 76.3378421,
-    name: "AED 9",
-    status: "working",
-    address: "Near Infopark Entrance, Infopark Rd, Kakkanad, Kochi, Kerala",
-  },
-  {
-    lat: 10.0201098,
-    lng: 76.3619053,
-    name: "AED 10",
-    status: "working",
-    address: "Rajagiri Valley, Kakkanad, Kochi, Kerala",
-  },
-  {
-    lat: 10.0047001,
-    lng: 76.3254134,
-    name: "AED 11",
-    status: "not working",
-    address: "Thrikkakara Temple, Thrikkakara North, Kakkanad, Kochi, Kerala",
-  },
-  {
-    lat: 9.9981663,
-    lng: 76.3080833,
     name: "AED 12",
-    status: "not working",
-    address: "Kakkanad Civil Station, Kochi, Kerala",
+    status: "Working",
+    address: "Address 12",
+  },
+  {
+    lat: 13.354114037719183,
+    lng: 74.79005392256965,
+    name: "AED 13",
+    status: "Not Working",
+    address: "Address 13",
+  },
+  {
+    lat: 13.3530168694712,
+    lng: 74.79030732847558,
+    name: "AED 14",
+    status: "Not Working",
+    address: "Address 14",
+  },
+  {
+    lat: 13.355544047292376,
+    lng: 74.78958512163997,
+    name: "AED 15",
+    status: "Not Working",
+    address: "Address 15",
+  },
+  {
+    lat: 13.35343601298784,
+    lng: 74.79344956172072,
+    name: "AED 16",
+    status: "Not Working",
+    address: "Address 16",
+  },
+  {
+    lat: 10.016599071352845,
+    lng: 76.36126622875468,
+    name: "AED 17",
+    status: "Working",
+    address: "Kakkanad Address 1",
+  },
+  {
+    lat: 10.015706926912236,
+    lng: 76.35865699384245,
+    name: "AED 18",
+    status: "Working",
+    address: "Kakkanad Address 2",
+  },
+  {
+    lat: 10.01704985473074,
+    lng: 76.35975579684184,
+    name: "AED 19",
+    status: "Not Working",
+    address: "Kakkanad Address 3",
+  },
+  {
+    lat: 10.014550547744108,
+    lng: 76.36141793592989,
+    name: "AED 20",
+    status: "Not Working",
+    address: "Kakkanad Address 4",
   },
 ];
 
@@ -145,7 +198,13 @@ function createMarkers(locations) {
               const duration = result.routes[0].legs[0].duration.text;
 
               // Update InfoWindow content with time to reach
-              const infoWindowContent = `<h3>${location.name}</h3><p>Status: ${location.status}</p><p>Address: ${location.address}</p><p>Time to reach: ${duration}</p>`;
+              const infoWindowContent = `
+              <h3>${location.name}</h3>
+              <p style="color: ${
+                location.status === "Working" ? "green" : "red"
+              }">Status: <span >${location.status}</span></p>
+              <p>Address: ${location.address}</p>
+              <p>Time to reach: ${duration}</p>`;
               const infoWindow = new google.maps.InfoWindow({
                 content: infoWindowContent,
               });
@@ -178,12 +237,10 @@ function showUserLocation(position) {
     lng: position.coords.longitude,
   };
 
-  // Remove the existing user marker if it exists
   if (userMarker) {
     userMarker.setMap(null);
   }
 
-  // Create a blue circle for the user's location
   userMarker = new google.maps.Marker({
     position: userLocation,
     map: map,
