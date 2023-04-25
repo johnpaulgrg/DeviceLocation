@@ -107,6 +107,7 @@ function initMap() {
 
   createMarkers(allLocations);
   requestUserLocation();
+  createLocationControl(map);
 }
 
 function createMarkers(locations) {
@@ -162,7 +163,7 @@ function createMarkers(locations) {
 
 function requestUserLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(showUserLocation, handleError, {
+    navigator.geolocation.getCurrentPosition(showUserLocation, handleError, {
       enableHighAccuracy: true,
       timeout: 10000,
       maximumAge: 60000,
@@ -197,7 +198,7 @@ function showUserLocation(position) {
     zIndex: google.maps.Marker.MAX_ZINDEX + 1,
   });
 
-  //   map.panTo(userLocation);
+  map.panTo(userLocation);
 }
 
 function handleError(error) {
@@ -215,4 +216,34 @@ function handleError(error) {
       alert("An unknown error occurred.");
       break;
   }
+}
+
+function createLocationControl(map) {
+  const locationControlDiv = document.createElement("div");
+  locationControlDiv.id = "location-control";
+  locationControlDiv.title = "Center map on your location";
+
+  locationControlDiv.addEventListener("click", () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+
+          map.panTo(userLocation);
+        },
+        (error) => {
+          alert("Error: " + error.message);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  });
+
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+    locationControlDiv
+  );
 }
