@@ -147,6 +147,7 @@ const allLocations = [
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
+    mapTypeControl: false,
     center: { lat: 28.4089, lng: 77.1162 },
     zoom: 15,
     styles: [
