@@ -195,39 +195,67 @@ function createMarkers(locations) {
         const userLocation = userMarker.getPosition();
         const destination = { lat: location.lat, lng: location.lng };
 
-        directionsService.route(
-          {
-            origin: userLocation,
-            destination: destination,
-            travelMode: google.maps.TravelMode.WALKING,
-          },
-          (result, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-              directionsRenderer.setDirections(result);
+        Promise.all([
+          getTravelTime(
+            directionsService,
+            userLocation,
+            destination,
+            google.maps.TravelMode.WALKING,
+            directionsRenderer
+          ),
+          getTravelTime(
+            directionsService,
+            userLocation,
+            destination,
+            google.maps.TravelMode.DRIVING,
+            directionsRenderer
+          ),
+        ]).then(([walkingDuration, drivingDuration]) => {
+          const infoWindowContent = `
+            <h3>${location.name}</h3>
+            <p style="color: ${
+              location.status === "Working" ? "green" : "red"
+            }">Status: <span >${location.status}</span></p>
+            <p>Address: ${location.address}</p>
+            <p>&#x1F6B6; Time to reach (walking): ${walkingDuration}</p>
+            <p>&#x1F697; Time to reach (driving): ${drivingDuration}</p>`;
+          const infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent,
+          });
 
-              // Calculate time to reach the location
-              const duration = result.routes[0].legs[0].duration.text;
-
-              // Update InfoWindow content with time to reach
-              const infoWindowContent = `
-              <h3>${location.name}</h3>
-              <p style="color: ${
-                location.status === "Working" ? "green" : "red"
-              }">Status: <span >${location.status}</span></p>
-              <p>Address: ${location.address}</p>
-              <p>Time to reach: ${duration}</p>`;
-              const infoWindow = new google.maps.InfoWindow({
-                content: infoWindowContent,
-              });
-
-              infoWindow.open(map, marker);
-            } else {
-              console.error(`Directions request failed due to ${status}`);
-            }
-          }
-        );
+          infoWindow.open(map, marker);
+        });
       }
     });
+  });
+}
+
+function getTravelTime(
+  directionsService,
+  origin,
+  destination,
+  travelMode,
+  directionsRenderer
+) {
+  return new Promise((resolve, reject) => {
+    directionsService.route(
+      {
+        origin: origin,
+        destination: destination,
+        travelMode: travelMode,
+      },
+      (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          const duration = result.routes[0].legs[0].duration.text;
+          if (travelMode === google.maps.TravelMode.WALKING) {
+            directionsRenderer.setDirections(result);
+          }
+          resolve(duration);
+        } else {
+          reject(`Directions request failed due to ${status}`);
+        }
+      }
+    );
   });
 }
 
