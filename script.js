@@ -199,7 +199,7 @@ function createMarkers(locations) {
           {
             origin: userLocation,
             destination: destination,
-            travelMode: google.maps.TravelMode.DRIVING,
+            travelMode: google.maps.TravelMode.WALKING,
           },
           (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
